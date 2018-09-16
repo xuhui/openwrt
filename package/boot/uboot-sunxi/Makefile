@@ -207,6 +207,14 @@ define U-Boot/orangepi_zero_plus
   UENV:=a64
 endef
 
+define U-Boot/licheepi_nano
+  BUILD_SUBTARGET:=arm9
+  NAME:=Lichee Pi Nano
+  BUILD_DEVICES:=suniv-f1c100s-licheepi-nano
+  UENV:=licheepi-nano
+endef
+
+
 UBOOT_TARGETS := \
 	A10-OLinuXino-Lime \
 	A13-OLinuXino \
@@ -236,7 +244,8 @@ UBOOT_TARGETS := \
 	pangolin \
 	pine64_plus \
 	sopine_baseboard \
-	orangepi_zero_plus
+	orangepi_zero_plus \
+	licheepi_nano
 
 UBOOT_CONFIGURE_VARS += USE_PRIVATE_LIBGCC=yes
 
