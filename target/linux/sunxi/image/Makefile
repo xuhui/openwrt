@@ -13,13 +13,15 @@ FAT32_BLOCKS=$(shell echo $$(($(CONFIG_SUNXI_SD_BOOT_PARTSIZE)*1024*1024/$(FAT32
 
 KERNEL_LOADADDR:=0x40008000
 
+# Any value to KERNEL_COMPRESS will use compress kernel
 define Build/sunxi-sdcard
 	rm -f $@.boot
 	mkfs.fat $@.boot -C $(FAT32_BLOCKS)
 
 	mcopy -i $@.boot $(STAGING_DIR_IMAGE)/$(DEVICE_NAME)-boot.scr ::boot.scr
 	mcopy -i $@.boot $(DTS_DIR)/$(SUNXI_DTS).dtb ::dtb
-	mcopy -i $@.boot $(IMAGE_KERNEL) ::uImage
+	$(if $(KERNEL_COMPRESS), mcopy -i $@.boot $(KDIR)/zImage ::zImage, \
+	    mcopy -i $@.boot $(IMAGE_KERNEL) ::uImage)
 	./gen_sunxi_sdcard_img.sh $@ \
 		$@.boot \
 		$(IMAGE_ROOTFS) \
@@ -42,5 +44,6 @@ endef
 include cortex-a7.mk
 include cortex-a8.mk
 include cortex-a53.mk
+include arm9.mk
 
 $(eval $(call BuildImage))
